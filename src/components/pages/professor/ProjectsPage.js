@@ -1,7 +1,7 @@
 import { setNestedObjectValues } from 'formik';
 import React, {useEffect, useState} from 'react'
 import {  useHistory } from 'react-router';
-import { addProject, projectsForSpecificProfessor } from '../services/ProjectService';
+import { addProject, projectsForSpecificProfessor } from '../../services/ProjectService';
 
 
 const ProjectsPage = ({activeUser}) => {

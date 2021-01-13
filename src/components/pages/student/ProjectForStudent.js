@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { getProjectOwner, retrieveProjectById } from '../services/ProjectService';
+import { addRequest, getProjectOwner, retrieveProjectById } from '../../services/ProjectService';
 import {useParams} from 'react-router-dom';
 
-const ProjectForStudent = () => {
+
+const ProjectForStudent = ({activeUser}) => {
 const{id} = useParams();
 const [project, setProject] = useState('');
 const [projectOwner, setProjectOwner] = useState('');
+const [applied, setApplied] = useState(false)
+
 useEffect(()=> {
    
        retrieveProjectById(id).then((response)=> 
@@ -19,14 +22,14 @@ useEffect(()=> {
        
 }, [])
 
-
-
-
-
-
-
-
-
+function sendRequest(){
+    addRequest({
+        applicationDate: new Date(),
+        student: activeUser,
+        project: project,
+        status : 'Request made By Student'
+    }).then((res) => setApplied(true))
+}
 
 
 
@@ -38,8 +41,8 @@ return (
     <div>Degree Type: {project.degreeType}</div>
     <div>Titular:{projectOwner} </div>
     <div>RecommendedSpecialization: {project.recommendedSpecialization}</div>
-
-
+    {!applied ? <button className="btn btn-success" onClick={sendRequest}>Apply For This Project</button>
+    : <div>Your request has been sent!</div>}
 
 
 

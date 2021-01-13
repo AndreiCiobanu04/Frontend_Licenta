@@ -19,12 +19,37 @@ export const updateProject = (project) => {
 }
 
 
-export const projectsForSpecificSpecialization = (specialization) => {
- return Axios.get(`http://localhost:8081/projectsForSpecificSpecialization/${specialization}`)
+export const projectsForSpecificSpecialization = (specialization, studentId) => {
+ return Axios.get(`http://localhost:8081/projectsForSpecificSpecialization/${specialization}`, {params : {studentId: studentId}})
 }
 
 export const getProjectOwner = (professorId) => {
    return Axios.get(`http://localhost:8081/getProjectOwner/${professorId}`)
 
 }
+
+
+export const addRequest =(request)=> {
+   return Axios.post("http://localhost:8081/addRequest", request)
+
+}
+
+
+export const requestsForSpecificStudent = (studentId) => {
+   return Axios.get(`http://localhost:8081/getRequestsForSpecificStudent/${studentId}`)
+}
+
+export const requestsForSpecificProfessor= (professorId) => {
+   return Axios.get(`http://localhost:8081/getRequestsForSpecificProfessor/${professorId}`)
+
+}
+
+export const getRequestById = (requestId) => {
+   return Axios.get(`http://localhost:8081/getRequestById/${requestId}`)
+}
+
+
+
+
+
 

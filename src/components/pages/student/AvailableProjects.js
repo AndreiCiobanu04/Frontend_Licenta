@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { projectsForSpecificSpecialization } from '../services/ProjectService'
+import { projectsForSpecificSpecialization } from '../../services/ProjectService'
 import {  useHistory } from 'react-router';
 
 
 
-const AvailableProjects = () => {
+const AvailableProjects = ({activeUser}) => {
 
     const [projects, setProjects] = useState([]);
 function showProjects(specialization){
-    projectsForSpecificSpecialization(specialization).then((response)=> setProjects(response.data));
+    projectsForSpecificSpecialization(specialization,activeUser.id ).then((response)=> setProjects(response.data));
 }
 const history = useHistory();
 

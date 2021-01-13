@@ -1,7 +1,7 @@
 import {Formik, Form, Field, ErrorMessage, FieldArray}  from 'formik'
 import {useParams} from 'react-router-dom';
 import React, {useEffect, useState} from 'react'
-import { addProject, retrieveProjectById, updateProject } from '../services/ProjectService';
+import { addProject, retrieveProjectById, updateProject } from '../../services/ProjectService';
 import {  useHistory } from 'react-router';
 
 
