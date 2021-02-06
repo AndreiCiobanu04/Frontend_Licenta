@@ -1,4 +1,4 @@
-import userEvent from '@testing-library/user-event';
+
 import React, { useEffect, useState } from 'react'
 import { requestsForSpecificStudent } from '../../services/ProjectService';
 import {  useHistory } from 'react-router';

@@ -7,12 +7,12 @@ import Header from './components/Header'
 import AccountInfo from './components/pages/AccountInfo'
 import ProjectForm from './components/pages/professor/ProjectForm'
 import ProjectsPage from './components/pages/professor/ProjectsPage'
-import {setupAxiosInterceptors} from './components/services/LoginService'
+import {isUserLoggedIn, setupAxiosInterceptors} from './components/services/LoginService'
 import AvailableProjects from './components/pages/student/AvailableProjects'
 import ProjectForStudent from './components/pages/student/ProjectForStudent'
 import StudentRequests from './components/pages/student/StudentRequests'
-import  ProfessorRequests  from './components/pages/professor/ProfessorRequests'
 import RequestDetails from './components/pages/professor/RequestDetails'
+import ProjectDetails from './components/pages/professor/ProjectDetails'
 
 const MiniApp = () => {
 
@@ -36,7 +36,7 @@ const MiniApp = () => {
 
 
     return (
-        <div className="miniapp">
+       
             <Router>
                 <>
                 <Header activeUser={activeUser} setActiveUser={setActiveUser} />
@@ -72,15 +72,16 @@ const MiniApp = () => {
 
                       <AuthenticatedRoute path="/studentRequests">
                           <StudentRequests activeUser={activeUser}/>
-                          </AuthenticatedRoute>  
-
-                        <AuthenticatedRoute path="/professorRequests">
-                           <ProfessorRequests activeUser={activeUser}/>
-                            </AuthenticatedRoute>    
+                          </AuthenticatedRoute>      
 
                        <AuthenticatedRoute path="/request/:id">
                            <RequestDetails activeUser={activeUser} />
-                           </AuthenticatedRoute>    
+                           </AuthenticatedRoute>   
+
+                       <AuthenticatedRoute path="/projectDetails/:id">
+                            <ProjectDetails activeUser={activeUser}/>
+                       </AuthenticatedRoute>
+                           
 
                 </Switch>
 
@@ -99,7 +100,7 @@ const MiniApp = () => {
 
 
 
-        </div>
+     
     )
 }
 

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {  useHistory } from 'react-router';
 import {Formik, Form, Field, ErrorMessage}  from 'formik'
 import { updateUser } from '../services/ProfileUpdateService'
-
+import './AccountInfo.css'
 
 
 
@@ -10,7 +10,7 @@ import { updateUser } from '../services/ProfileUpdateService'
 const AccountInfo = ({activeUser, setActiveUser}) => {
     
     const [editMode, setEditMode] = useState(false)
-    const {username, firstName, lastName, department, email, password, typeOfUser} = activeUser
+    const {username, firstName, lastName, department, email, password, typeOfUser, avgGrade, series, degreeType } = activeUser
     const history = useHistory();
     
 
@@ -55,21 +55,77 @@ const AccountInfo = ({activeUser, setActiveUser}) => {
 
     return(
     
+        // pe on click la edit setEditMode(true)
     <div>
         {!editMode ? <div>
-        <h1>Complete your personal information</h1>
-        <div>Username: <span>{username}</span></div>
-        <div>FirstName: <span>{firstName}</span></div>
-        <div>LastName: <span>{lastName}</span></div>
-      {isProfessor() &&  <div>Department: <span>{department}</span></div> }
-        <div>Email:<span>{email}</span></div>
-        <div>Password:<span>{password}</span></div>
-        <div onClick={() => setEditMode(true)}>Edit</div>
+        <h2>Personal Information</h2>     <button className="btn btn-info d-grid gap-2 col-1 mx-auto" onClick={()=> setEditMode(true)}>Edit</button>
+        <div className="table-responsive">
+            <table className="table table-bordered">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">First Name</th>
+                    <td>{firstName}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Last Name</th>
+                    <td>{lastName}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Username</th>
+                    <td>{username}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Email Address</th>
+                    <td>{email}</td>
+                </tr>
+               { typeOfUser === 'professor' && <tr>
+                    <th scope="row">Department</th>
+                    <td>{department}</td>
+                </tr> }
+
+               { typeOfUser === 'student' && <tr>
+                    <th scope="row">Series</th>
+                    <td>{series}</td>
+                </tr>   }
+
+              {  typeOfUser === 'student' && <tr>
+                    <th scope="row">Average Grade</th>
+                    <td>{avgGrade}</td>
+                </tr> }
+
+               { typeOfUser === 'student' && <tr>
+                    <th scope="row">Degree Type</th>
+                    <td>{degreeType}</td>
+                </tr> }
+                
+
+                
+
+                
+                 </tbody>
+
+
+
+
+
+
+
+            </table>
+            </div>
+
+
         </div>   :  
-    
-        <Formik initialValues={
+        <div style={{
+            display:'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+        }}>
+        <Formik  initialValues={
             activeUser
             }
+            
             onSubmit={(values) => onSubmit(values)}
             validate={validate}
             validateOnChange={false}
@@ -78,8 +134,9 @@ const AccountInfo = ({activeUser, setActiveUser}) => {
             >
                 {
                     (props) => (
-                        <Form>
-                            <fieldset className="form-group">
+                        
+                        <Form className="col-sm-12 col-md-6 col-lg-4"  >
+                            <fieldset className="form-group col-form-label">
                                 <label>FirstName: </label>
                                 <Field type="text" name="firstName" className="form-control" />
                             </fieldset>
@@ -100,30 +157,38 @@ const AccountInfo = ({activeUser, setActiveUser}) => {
                                 <Field type="text" name="department" className="form-control" />
                             </fieldset> }
 
-                            {!isProfessor && <fieldset className="form-group">
+                            {!isProfessor() && <fieldset className="form-group">
                                 <label>Series: </label>
                                 <Field type="text" name="series" className="form-control" />
                             </fieldset>}
 
-                            { !isProfessor && <fieldset className="form-group">
-                                <label>Average Grade: </label>
-                                <Field type="text" name="avgGrade" className="form-control" />
+                            { !isProfessor() && <fieldset className="form-group">
+                                <label>Average Grade: {props.values.avgGrade}</label>
+                                <br />
+                                <Field type="range" className="form-range" name="avgGrade" min="0.0" max="10.0" step="0.1"/>
+                                    
+                                {/* <Field type="text" name="avgGrade" className="form-control" /> */}
                             </fieldset>}
 
-                           {!isProfessor && <div>
-                            <div id="my-radio-group">Type of Degree</div>
-                        <div role="group" aria-labelledby="my-radio-group">
-                            <label>
-                            <Field type="radio" name="degreeType" value="Bachelor" />
-                            Bachelor
-                            </label>
-                            <label>
-                            <Field type="radio" name="degreeType" value="Master" />
-                            Master
-                            </label>
-                            
-                        </div>
-                            </div>}
+                           {!isProfessor() && 
+                           <fieldset className="row mb-3">
+                           <legend className="col-form-label col-sm-2 pt-0">DegreeType</legend>
+                           <div className="col-sm-10">
+                             <div className="form-check">
+                               <Field className="form-check-input" type="radio" name="degreeType" id="gridRadios1" value="Bachelor" />
+                               <label className="form-check-label" for="gridRadios1">
+                                Bachelor
+                               </label>
+                             </div>
+                             <div className="form-check">
+                               <Field className="form-check-input" type="radio" name="degreeType" id="gridRadios2" value="Master" />
+                               <label className="form-check-label" for="gridRadios2">
+                                 Master
+                               </label>
+                             </div>
+                           </div>
+                         </fieldset>
+                        }
                         
 
                             
@@ -135,7 +200,9 @@ const AccountInfo = ({activeUser, setActiveUser}) => {
                     )
                 }
 
-        </Formik> }
+        </Formik>
+        </div>
+         }
 
         </div>
     )

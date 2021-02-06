@@ -44,10 +44,15 @@ export const requestsForSpecificProfessor= (professorId) => {
 
 }
 
+
+
 export const getRequestById = (requestId) => {
    return Axios.get(`http://localhost:8081/getRequestById/${requestId}`)
 }
 
+export const requestsForSpecificProject = (projectId) => {
+   return Axios.get(`http://localhost:8081/getRequestsForSpecificProject/${projectId}`)
+}
 
 
 

@@ -25,7 +25,7 @@ import isProfessor from './pages/AccountInfo'
                 {isUserLoggedIn() && activeUser.typeOfUser==="student"&& <li><Link className="nav-link" to="/availableProjects">Available Projects</Link></li>}
                 {isUserLoggedIn() && <li><Link className="nav-link" to="/accountInfo">Account Information</Link></li>}
                 {isUserLoggedIn() && activeUser.typeOfUser==='student' && <li><Link className="nav-link" to="/studentRequests">Requests</Link></li>}
-                {isUserLoggedIn() && activeUser.typeOfUser==='professor' && <li><Link className="nav-link" to="/professorRequests">Requests</Link></li>}
+                
             </ul>
             <ul className="navbar nav navbar-collapse justify-content-end">
                {!isUserLoggedIn() && <li><Link  className="nav-link" to="/login">Login</Link></li>}

@@ -8,10 +8,10 @@ const RequestDetails = () => {
 
     const{id} = useParams();
     const history = useHistory();
-    const [request, setRequest] = useState()
+    const [requestInfo, setRequestInfo] = useState()
 
     useEffect(()=> {
-        getRequestById(id).then((response) => setRequest(response.data))
+        getRequestById(id).then((response) => setRequestInfo(response.data))
     } ,[])
 
 
@@ -20,7 +20,7 @@ const RequestDetails = () => {
     }
 
 
-if (!request)
+if (!requestInfo)
 return <span>Loading...</span>
 
 
@@ -29,10 +29,10 @@ return <span>Loading...</span>
         <div>
 
             <div>Request Information</div>
-            <div>Project Title:{request.project.title} </div>
-            <div>Description:{request.project.description} </div>
-            <div>Student:{request.student.firstName} {request.student.lastName} </div>
-            <div>Type of Degree:{request.project.degreeType} </div>
+            <div>Project Title:{requestInfo.project.title} </div>
+            <div>Description:{requestInfo.project.description} </div>
+            <div>Student:{requestInfo.student.firstName} {requestInfo.student.lastName} </div>
+            <div>Type of Degree:{requestInfo.project.degreeType} </div>
             <div> 
                 <button className="btn btn-success">Accept Student</button>
                 <button className="btn btn-danger">Decline Student</button>
