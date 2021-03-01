@@ -20,11 +20,11 @@ const history = useHistory();
             <div>Descriere despre cum functioneaza cele 3 metode de alegere a unui proiect</div>
 
             <div>
-                <button onClick={()=> showProjects("MON")}>MON</button>
-                <button onClick={()=> showProjects("ELA")}>ELA</button>
-                <button onClick={()=> showProjects("CTI")}>CTI</button>
-                <button onClick={()=> showProjects("RST")}>RST</button>
-                <button onClick={()=> showProjects("TST")}>TST</button>
+                <button className="btn btn-info" onClick={()=> showProjects("MON")}>MON</button>
+                <button className="btn btn-info" onClick={()=> showProjects("ELA")}>ELA</button>
+                <button className="btn btn-info" onClick={()=> showProjects("CTI")}>CTI</button>
+                <button className="btn btn-info" onClick={()=> showProjects("RST")}>RST</button>
+                <button className="btn btn-info" onClick={()=> showProjects("TST")}>TST</button>
             </div>
 
             <div className="container">
@@ -34,6 +34,7 @@ const history = useHistory();
                         <th>Title</th>
                         <th>Description</th>
                         <th>Type of Degree</th>
+                        <th>Details</th>
                         
                     </tr>
                 </thead>
@@ -43,7 +44,7 @@ const history = useHistory();
                             <td>{project.title}</td>
                             <td>{project.description}</td>
                             <td>{project.degreeType}</td>
-                            <td><button onClick={()=>history.push(`/project/${project.id}`)} className="btn btn-success">Vezi detalii</button></td>
+                            <td><button onClick={()=>history.push(`/project/${project.id}`)} className="btn btn-success">Details</button></td>
                         </tr>)}
                 </tbody>
             </table>

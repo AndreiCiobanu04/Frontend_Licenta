@@ -17,10 +17,11 @@ const StudentRequests = ({activeUser}) => {
         showRequests()
     }, [])
 
+if(!requests)
+return <div>Loading...</div>
 
 
-
-
+console.log(requests)
 
     return(
         <div>
@@ -33,6 +34,8 @@ const StudentRequests = ({activeUser}) => {
                         <th>Title</th>
                         <th>Description</th>
                         <th>Type of Degree</th>
+                        <th>Details</th>
+                        
                         
                     </tr>
                 </thead>
@@ -42,7 +45,7 @@ const StudentRequests = ({activeUser}) => {
                             <td>{request.project.title}</td>
                             <td>{request.project.description}</td>
                             <td>{request.status}</td>
-                            <td><button onClick={()=>history.push(`/project/${request.project.id}`)} className="btn btn-success">Vezi detalii</button></td>
+                            <td><button onClick={()=>history.push(`/requestDetailsStud/${request.id}`)} className="btn btn-success">Details</button></td>
                         </tr>)}
                 </tbody>
             </table>

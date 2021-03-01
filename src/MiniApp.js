@@ -13,6 +13,7 @@ import ProjectForStudent from './components/pages/student/ProjectForStudent'
 import StudentRequests from './components/pages/student/StudentRequests'
 import RequestDetails from './components/pages/professor/RequestDetails'
 import ProjectDetails from './components/pages/professor/ProjectDetails'
+import RequestDetailsStud from './components/pages/student/RequestDetailsStud'
 
 const MiniApp = () => {
 
@@ -80,6 +81,10 @@ const MiniApp = () => {
 
                        <AuthenticatedRoute path="/projectDetails/:id">
                             <ProjectDetails activeUser={activeUser}/>
+                       </AuthenticatedRoute>
+
+                       <AuthenticatedRoute path="/requestDetailsStud/:id">
+                           <RequestDetailsStud activeUser={activeUser}/>
                        </AuthenticatedRoute>
                            
 

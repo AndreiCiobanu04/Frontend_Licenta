@@ -18,6 +18,10 @@ export const updateProject = (project) => {
    return Axios.post('http://localhost:8081/updateProject', project)
 }
 
+export const deleteProject = (projectId) => {
+   return Axios.delete(`http://localhost:8081/deleteProject/${projectId}`)
+}
+
 
 export const projectsForSpecificSpecialization = (specialization, studentId) => {
  return Axios.get(`http://localhost:8081/projectsForSpecificSpecialization/${specialization}`, {params : {studentId: studentId}})
@@ -55,6 +59,12 @@ export const requestsForSpecificProject = (projectId) => {
 }
 
 
+export const updateRequestStatus = (requestId, newStatus) => {
+   return Axios.post(`http://localhost:8081/updateRequestStatus/${requestId}`, {newStatus})
+}
 
+export const assignProjectToStudent = (project, student) => {
+   return Axios.post('http://localhost:8081/assignProjectToStudent', {project, student})
+}
 
 

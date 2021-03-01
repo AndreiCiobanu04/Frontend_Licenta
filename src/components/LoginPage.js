@@ -70,7 +70,7 @@ const LoginPage = ({setActiveUser}) => {
 
              <div className="container-fluid">
 	
-		<div className="card col-sm-8 col-md-4 col-lg-3 offset-md-4 offset-lg-4">
+		<div className="card-login card col-sm-8 col-md-4 col-lg-3 offset-md-4 offset-lg-4">
 			<div className="card-header">
 				<h3>Sign In</h3>
 			</div>

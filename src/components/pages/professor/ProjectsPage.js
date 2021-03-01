@@ -1,13 +1,13 @@
 
 import React, {useEffect, useState} from 'react'
 import {  useHistory } from 'react-router';
-import { addProject, projectsForSpecificProfessor } from '../../services/ProjectService';
+import { addProject, projectsForSpecificProfessor, deleteProject } from '../../services/ProjectService';
 import './Form.css'
 
 const ProjectsPage = ({activeUser}) => {
 const history = useHistory();
 const [projects, setProjects] = useState([]);
-
+const [reload, setReload] = useState(false)
 
 
 function retrieveProjects(){
@@ -19,7 +19,7 @@ console.log(projects)
 
 useEffect(()=> {
     retrieveProjects()
-}, [])
+}, [reload])
 
 function addProject(){
     history.push('/projects/-1')
@@ -27,6 +27,10 @@ function addProject(){
 
 function updateProjectById(id){
     history.push(`projects/${id}`)
+}
+
+function deleteProjectById(projectId){
+    deleteProject(projectId).then(r => setReload(!reload))
 }
 
 
@@ -57,7 +61,7 @@ return (
                             <td>{project.title}</td>
                             <td>{project.description}</td>
                             <td>{project.degreeType}</td>
-                            <td><button className=" btn btn-danger">Delete</button></td>
+                            <td><button className=" btn btn-danger" onClick={()=> deleteProjectById(project.id)}>Delete</button></td>
                             <td><button className="btn btn-success" onClick={()=> updateProjectById(project.id)}>Update</button></td>
                             <td><button className=" btn btn-dark"   onClick={()=> history.push(`/projectDetails/${project.id}`)}>Details</button></td>
                         </tr>)}
