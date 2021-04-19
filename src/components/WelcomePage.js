@@ -12,6 +12,8 @@ const WelcomePage = () => {
 
 
 
+
+
     return (
         <>
         <div>Salut, te ai autentificat cu succes </div>
