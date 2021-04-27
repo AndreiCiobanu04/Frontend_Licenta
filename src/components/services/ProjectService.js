@@ -81,3 +81,10 @@ export const retrieveAllKeywords = () => {
 export const retrieveAssignedProject = (studentId) => {
   return Axios.get(`http://localhost:8081/getProjectByStudentId/${studentId}`);
 };
+
+export const addStageToProject = (projectId, stage) => {
+  return Axios.post(
+    `http://localhost:8081/addStageToProject/${projectId}`,
+    stage
+  );
+};
