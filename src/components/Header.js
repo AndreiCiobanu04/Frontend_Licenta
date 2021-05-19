@@ -59,6 +59,13 @@ const Header = ({ activeUser, setActiveUser }) => {
                 </Link>
               </li>
             )}
+          {isUserLoggedIn() && activeUser.typeOfUser === "student" && (
+            <li>
+              <Link className="nav-link" to="/skillAssesment">
+                Skills Assesment
+              </Link>
+            </li>
+          )}
           {isUserLoggedIn() &&
             activeUser.typeOfUser === "student" &&
             activeUser.projectId && (

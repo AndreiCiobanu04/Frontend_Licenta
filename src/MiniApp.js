@@ -18,6 +18,7 @@ import RequestDetails from "./components/pages/professor/RequestDetails";
 import ProjectDetails from "./components/pages/professor/ProjectDetails";
 import RequestDetailsStud from "./components/pages/student/RequestDetailsStud";
 import AssignedProject from "./components/pages/student/AssignedProject";
+import Assesment from "./components/pages/student/Assesment";
 
 const MiniApp = () => {
   const [activeUser, setActiveUser] = useState(
@@ -92,6 +93,10 @@ const MiniApp = () => {
 
           <AuthenticatedRoute path="/assignedProject">
             <AssignedProject activeUser={activeUser} />
+          </AuthenticatedRoute>
+
+          <AuthenticatedRoute path="/skillAssesment">
+            <Assesment activeUser={activeUser} />
           </AuthenticatedRoute>
         </Switch>
       </>

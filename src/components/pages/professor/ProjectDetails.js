@@ -140,7 +140,7 @@ const ProjectDetails = ({ activeUser }) => {
               </FieldArray>
 
               <fieldset>
-                <DatePickerField name="date" />
+                <DatePickerField name="deadline" />
               </fieldset>
 
               <button className="btn btn-success float-left" type="submit">
