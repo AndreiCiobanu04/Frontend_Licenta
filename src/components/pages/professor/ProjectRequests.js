@@ -73,6 +73,7 @@ const ProjectRequests = ({ projectId }) => {
           <div>Series: {selectedRequest.student.series}</div>
           <div>Average Grade: {selectedRequest.student.avgGrade}</div>
           <div>Email: {selectedRequest.student.email}</div>
+          <div>Scoring: {selectedRequest.scoring}</div>
           <div>
             Application Date:{" "}
             {moment(selectedRequest.applicationDate).format("YYYY-MM-DD")}{" "}

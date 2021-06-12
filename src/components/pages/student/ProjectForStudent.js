@@ -5,22 +5,76 @@ import {
   retrieveProjectById,
 } from "../../services/ProjectService";
 import { useParams } from "react-router-dom";
+import { getAssesmentReview } from "../../services/AssesmentService";
 
 const ProjectForStudent = ({ activeUser }) => {
   const { id } = useParams();
   const [project, setProject] = useState("");
   const [projectOwner, setProjectOwner] = useState("");
   const [applied, setApplied] = useState(false);
+  const [review, setReview] = useState([]);
+  const [scoring, setScoring] = useState([]);
 
   useEffect(() => {
     retrieveProjectById(id).then((response) => {
       setProject(response.data);
-      console.log(project);
+
       getProjectOwner(response.data.professorId).then((r) =>
         setProjectOwner(r.data)
       );
+      getAssesmentReview(activeUser.id)
+        .then((r) => setReview(r.data))
+        .then((r) => calculateScoring());
     });
   }, []);
+
+  function calculateScoring() {
+    console.log(review);
+    console.log(project);
+    let kScore;
+    let sScore;
+
+    if (
+      review.keywords &&
+      review.keywords.length > 0 &&
+      project.keywords.length > 0
+    ) {
+      console.log("a");
+      let common = project.keywords.filter((value) =>
+        review.keywords.includes(value)
+      );
+      console.log(common);
+      kScore = common.length / project.keywords.length;
+      console.log(kScore);
+    }
+
+    if (review.skills && review.skills.length > 0) {
+      let common = [];
+      for (let i = 0; i < project.properties.length; i++) {
+        for (let j = 0; j < review.skills.length; j++) {
+          if (
+            project.properties[i].skillName.toLowerCase() ==
+            review.skills[j].skillName.toLowerCase()
+          ) {
+            common.push(
+              (project.properties[i].skillScore - review.skills[j].skillScore) /
+                project.properties[i].skillScore
+            );
+          }
+        }
+      }
+      console.log(common);
+      let result = common.map((n) => (1 - n) * 100);
+      let totalScore = 0;
+      console.log(result);
+      for (let i = 0; i < result.length; i++) {
+        totalScore += result[i];
+      }
+      totalScore = totalScore / project.properties.length;
+      console.log(totalScore);
+      setScoring(totalScore);
+    }
+  }
 
   function sendRequest() {
     addRequest({
@@ -28,6 +82,7 @@ const ProjectForStudent = ({ activeUser }) => {
       student: activeUser,
       project: project,
       status: "Request made By Student",
+      scoring: scoring,
     }).then((res) => setApplied(true));
   }
 
@@ -45,6 +100,7 @@ const ProjectForStudent = ({ activeUser }) => {
       ) : (
         <div>Your request has been sent!</div>
       )}
+      <button onClick={calculateScoring}>Calculate</button>
     </div>
   );
 };
