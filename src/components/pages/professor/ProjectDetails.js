@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
+  addStageToProject,
+  getStudentById,
   requestsForSpecificProject,
   retrieveProjectById,
 } from "../../services/ProjectService";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
-
+import emailjs from "emailjs-com";
 import ProjectRequests from "./ProjectRequests";
 
 import { DatePickerField } from "../../shared/DatePicker";
@@ -14,19 +16,38 @@ const ProjectDetails = ({ activeUser }) => {
   const { id } = useParams();
   const [projectInfo, setProjectInfo] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [reload, setReload] = useState(false);
+  const [deadlines, setDeadlines] = useState([]);
+  const [student, setStudent] = useState([]);
 
   useEffect(() => {
     retrieveProjectById(id).then((response) => {
       setProjectInfo(response.data);
+      setDeadlines(response.data.stages);
+      if (response.data.student_id) {
+        getStudentById(response.data.student_id).then((r) =>
+          setStudent(r.data)
+        );
+      }
     });
-    console.log(projectInfo);
-  }, []);
 
-  function onSubmit(values) {
-    console.log(values);
+    console.log(projectInfo);
+  }, [reload]);
+
+  function onSubmit(values, resetForm) {
+    addStageToProject(projectInfo.id, values).then((r) => {
+      let obj = {
+        from_name: "Aplicatie Licenta",
+        to_name: student.name,
+      };
+      setReload(!reload);
+    });
+    resetForm();
   }
 
   if (!projectInfo) return <span>Loading...</span>;
+
+  function sendEmail(obj) {}
 
   return (
     <div className="container">
@@ -79,6 +100,28 @@ const ProjectDetails = ({ activeUser }) => {
       </div>
       <div>
         <h5>Stages and Deadlines</h5>
+        {deadlines.length > 0 ? (
+          <div>
+            {deadlines.map((element) => (
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">{element.name}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">
+                    {element.mainTask}
+                  </h6>
+                  {element.subTasks.length > 0
+                    ? element.subTasks.map((subTask) => (
+                        <p class="card-text">{subTask}</p>
+                      ))
+                    : []}
+                  <p>Deadline: {element.deadline}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          "No deadlines added yet."
+        )}
         <Formik
           initialValues={{
             name: "",
@@ -86,7 +129,9 @@ const ProjectDetails = ({ activeUser }) => {
             mainTask: "",
             subTasks: [],
           }}
-          onSubmit={async (values) => onSubmit(values)}
+          onSubmit={async (values, { resetForm }) =>
+            onSubmit(values, resetForm)
+          }
           enableReinitialize={true}
           validateOnChange={false}
         >

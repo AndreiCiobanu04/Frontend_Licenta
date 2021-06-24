@@ -67,6 +67,10 @@ export const updateRequestStatus = (requestId, newStatus) => {
   });
 };
 
+export const deleteRequest = (requestId) => {
+  return Axios.delete(`http://localhost:8081/deleteRequest/${requestId}`);
+};
+
 export const assignProjectToStudent = (project, student) => {
   return Axios.post("http://localhost:8081/assignProjectToStudent", {
     project,
@@ -87,4 +91,8 @@ export const addStageToProject = (projectId, stage) => {
     `http://localhost:8081/addStageToProject/${projectId}`,
     stage
   );
+};
+
+export const getStudentById = (studentId) => {
+  return Axios.get(`http://localhost:8081/getStudentById/${studentId}`);
 };

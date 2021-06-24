@@ -8,7 +8,7 @@ export const DatePickerField = ({ ...props }) => {
   const [field] = useField(props);
   return (
     <DatePicker
-      placeholderText="Date"
+      placeholderText="Deadline"
       {...field}
       {...props}
       selected={(field.value && new Date(field.value)) || null}

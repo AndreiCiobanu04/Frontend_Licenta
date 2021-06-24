@@ -19,12 +19,13 @@ const ProjectForStudent = ({ activeUser }) => {
     retrieveProjectById(id).then((response) => {
       setProject(response.data);
 
-      getProjectOwner(response.data.professorId).then((r) =>
-        setProjectOwner(r.data)
-      );
-      getAssesmentReview(activeUser.id)
-        .then((r) => setReview(r.data))
-        .then((r) => calculateScoring());
+      getProjectOwner(response.data.professorId).then((r) => {
+        setProjectOwner(r.data);
+        getAssesmentReview(activeUser.id).then((r) => {
+          setReview(r.data);
+          calculateScoring();
+        });
+      });
     });
   }, []);
 
@@ -65,14 +66,15 @@ const ProjectForStudent = ({ activeUser }) => {
       }
       console.log(common);
       let result = common.map((n) => (1 - n) * 100);
-      let totalScore = 0;
+      sScore = 0;
       console.log(result);
       for (let i = 0; i < result.length; i++) {
-        totalScore += result[i];
+        sScore += result[i];
       }
-      totalScore = totalScore / project.properties.length;
-      console.log(totalScore);
-      setScoring(totalScore);
+      sScore = sScore / project.properties.length;
+      console.log(sScore);
+      const scoring = (kScore + sScore) / 2;
+      setScoring(scoring);
     }
   }
 

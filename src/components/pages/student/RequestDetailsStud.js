@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   assignProjectToStudent,
+  deleteRequest,
   getProjectOwner,
   getRequestById,
   updateRequestStatus,
@@ -8,7 +9,7 @@ import {
 import { useParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-
+import { useHistory } from "react-router";
 const RequestDetailsStud = ({ activeUser }) => {
   const [project, setProject] = useState([]);
   const [projectOwner, setProjectOwner] = useState("");
@@ -17,6 +18,8 @@ const RequestDetailsStud = ({ activeUser }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [reload, setReload] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     getRequestById(id).then((response) => {
@@ -26,7 +29,7 @@ const RequestDetailsStud = ({ activeUser }) => {
         setProjectOwner(r.data)
       );
     });
-  }, []);
+  }, [reload]);
 
   if (!project) return <span>Loading...</span>;
 
@@ -40,22 +43,24 @@ const RequestDetailsStud = ({ activeUser }) => {
           </h5>
           <p>Status: {request.status}</p>
           <p className="card-text">{project.description}</p>
-          <h7>Minimum Average Grade Required: {project.minGrade}</h7>
+          <p>Minimum Average Grade Required: {project.minGrade}</p>
           {
             <ul className="">
               Keywords
-              {project.keywords != undefined
-                ? project.keywords.map((keyword) => (
-                    <li className="">{keyword}</li>
+              {project.keywords !== undefined
+                ? project.keywords.map((keyword, index) => (
+                    <li key={index} className="">
+                      {keyword}
+                    </li>
                   ))
                 : ""}
             </ul>
           }
           <ul className="">
             Skills
-            {project.properties != undefined
-              ? project.properties.map((skill) => (
-                  <li className="">
+            {project.properties !== undefined
+              ? project.properties.map((skill, index) => (
+                  <li key={index} className="">
                     <span>
                       {skill.skillName} : {skill.skillScore}
                     </span>
@@ -63,8 +68,9 @@ const RequestDetailsStud = ({ activeUser }) => {
                 ))
               : ""}
           </ul>
+          <p>Scoring: {request.scoring}</p>
         </div>
-        <div class="card-footer">
+        <div className="card-footer">
           {request.status === "Accepted By Professor" ? (
             <Button
               className="float-right"
@@ -77,7 +83,18 @@ const RequestDetailsStud = ({ activeUser }) => {
             <div>Request Pending...</div>
           )}
           {request.status === "Accepted By Professor" && (
-            <button className="btn btn-danger float-left">Decline</button>
+            <button
+              onClick={() =>
+                deleteRequest(request.id).then((r) => {
+                  setReload(!reload);
+                  handleClose();
+                  history.push("/studentRequests");
+                })
+              }
+              className="btn btn-danger float-left"
+            >
+              Decline
+            </button>
           )}
         </div>
         <Modal show={show} onHide={handleClose}>
