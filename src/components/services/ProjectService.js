@@ -96,3 +96,13 @@ export const addStageToProject = (projectId, stage) => {
 export const getStudentById = (studentId) => {
   return Axios.get(`http://localhost:8081/getStudentById/${studentId}`);
 };
+
+export const deleteStageById = (stageId) => {
+  return Axios.delete(`http://localhost:8081/deleteStageOfProject/${stageId}`);
+};
+
+export const changeStatusOfStage = (stageId, status) => {
+  return Axios.post(`http://localhost:8081/changeStatusOfStage/${stageId}`, {
+    newStatus: status,
+  });
+};

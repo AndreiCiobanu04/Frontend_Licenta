@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   addStageToProject,
+  changeStatusOfStage,
+  deleteStageById,
   getStudentById,
   requestsForSpecificProject,
   retrieveProjectById,
@@ -9,8 +11,10 @@ import {
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import emailjs from "emailjs-com";
 import ProjectRequests from "./ProjectRequests";
-
+import moment from "moment";
 import { DatePickerField } from "../../shared/DatePicker";
+import { DropdownButton } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 
 const ProjectDetails = ({ activeUser }) => {
   const { id } = useParams();
@@ -24,8 +28,9 @@ const ProjectDetails = ({ activeUser }) => {
     retrieveProjectById(id).then((response) => {
       setProjectInfo(response.data);
       setDeadlines(response.data.stages);
-      if (response.data.student_id) {
-        getStudentById(response.data.student_id).then((r) =>
+      if (response.data.student.id) {
+        console.log(response.data);
+        getStudentById(response.data.student.id).then((r) =>
           setStudent(r.data)
         );
       }
@@ -35,11 +40,20 @@ const ProjectDetails = ({ activeUser }) => {
   }, [reload]);
 
   function onSubmit(values, resetForm) {
+    console.log(student);
     addStageToProject(projectInfo.id, values).then((r) => {
       let obj = {
-        from_name: "Aplicatie Licenta",
-        to_name: student.name,
+        from_name: "Echipa Aplicatie Licenta",
+        to_name: student.firstName + student.lastName,
+        to_email: student.email,
+        message: `Un nou stagiu a fost adaugat pentru proiectul ${
+          projectInfo.title
+        }. Termenul stabilit este ${moment(values.deadline).format(
+          "DD-MM-YYYY"
+        )}`,
       };
+
+      sendEmail(obj);
       setReload(!reload);
     });
     resetForm();
@@ -47,7 +61,19 @@ const ProjectDetails = ({ activeUser }) => {
 
   if (!projectInfo) return <span>Loading...</span>;
 
-  function sendEmail(obj) {}
+  function sendEmail(obj) {
+    // emailjs.send(
+    //   "service_vlhl7m8",
+    //   "template_phgtgke",
+    //   obj,
+    //   "user_sgOr5gPcnOMGcvNEhY1W9"
+    // );
+    console.log("se trimite mail");
+  }
+  function changeStatus(id, status) {
+    console.log(status);
+    changeStatusOfStage(id, status).then((r) => setReload(!reload));
+  }
 
   return (
     <div className="container">
@@ -72,8 +98,8 @@ const ProjectDetails = ({ activeUser }) => {
             <dd className="col-sm-9">
               <p>
                 {projectInfo.keywords != undefined
-                  ? projectInfo.keywords.map((keyword) => (
-                      <span>{keyword}, </span>
+                  ? projectInfo.keywords.map((keyword, index) => (
+                      <span key={index}>{keyword}, </span>
                     ))
                   : ""}
               </p>
@@ -83,8 +109,8 @@ const ProjectDetails = ({ activeUser }) => {
             <dd className="col-sm-9">
               <p>
                 {projectInfo.properties != undefined
-                  ? projectInfo.properties.map((skill) => (
-                      <span>
+                  ? projectInfo.properties.map((skill, index) => (
+                      <span key={index}>
                         {skill.skillName} : {skill.skillScore}{" "}
                       </span>
                     ))
@@ -102,19 +128,57 @@ const ProjectDetails = ({ activeUser }) => {
         <h5>Stages and Deadlines</h5>
         {deadlines.length > 0 ? (
           <div>
-            {deadlines.map((element) => (
-              <div className="card">
+            {deadlines.map((element, index) => (
+              <div key={index} className="card">
                 <div className="card-body">
                   <h5 className="card-title">{element.name}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">
                     {element.mainTask}
                   </h6>
                   {element.subTasks.length > 0
-                    ? element.subTasks.map((subTask) => (
-                        <p class="card-text">{subTask}</p>
+                    ? element.subTasks.map((subTask, index1) => (
+                        <p key={index1} className="card-text">
+                          {subTask}
+                        </p>
                       ))
                     : []}
-                  <p>Deadline: {element.deadline}</p>
+                  <p>
+                    Deadline: {moment(element.deadline).format("DD-MM-YYYY")}
+                  </p>
+                  <DropdownButton
+                    id="dropdown-item-button"
+                    title={element.status ? element.status : "No status"}
+                  >
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => changeStatus(element.id, "Backlog")}
+                    >
+                      Backlog
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => changeStatus(element.id, "In progress")}
+                    >
+                      In progress
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => changeStatus(element.id, "Done")}
+                    >
+                      Done
+                    </Dropdown.Item>
+                  </DropdownButton>
+
+                  <button
+                    onClick={() => {
+                      deleteStageById(element.id).then((r) =>
+                        setReload(!reload)
+                      );
+                    }}
+                    className="btn btn-danger float-right"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
@@ -129,8 +193,8 @@ const ProjectDetails = ({ activeUser }) => {
             mainTask: "",
             subTasks: [],
           }}
-          onSubmit={async (values, { resetForm }) =>
-            onSubmit(values, resetForm)
+          onSubmit={(values, { resetForm }) =>
+            onSubmit({ ...values, status: "In progress" }, resetForm)
           }
           enableReinitialize={true}
           validateOnChange={false}
