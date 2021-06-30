@@ -4,6 +4,7 @@ import {
   addProject,
   projectsForSpecificProfessor,
   deleteProject,
+  getProjectOwner,
 } from "../../services/ProjectService";
 import "./Form.css";
 import { DropdownButton } from "react-bootstrap";
@@ -17,11 +18,11 @@ const ProjectsPage = ({ activeUser }) => {
 
   function retrieveProjects() {
     projectsForSpecificProfessor(activeUser.id).then((response) => {
+      console.log(typeof response.data);
       setProjects(response.data);
       setFilteredProjects(response.data);
     });
   }
-  console.log(projects);
 
   useEffect(() => {
     retrieveProjects();
@@ -75,7 +76,7 @@ const ProjectsPage = ({ activeUser }) => {
             <tr>
               <th>Id</th>
               <th>Title</th>
-              <th>Description</th>
+              <th>Specialization</th>
               <th>Type of Degree</th>
               <th>Delete</th>
               <th>Update</th>
@@ -83,40 +84,42 @@ const ProjectsPage = ({ activeUser }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredProjects.map((project) => (
-              <tr key={project.id}>
-                <td>{project.id}</td>
-                <td>{project.title}</td>
-                <td>{project.description}</td>
-                <td>{project.degreeType}</td>
-                <td>
-                  <button
-                    className=" btn btn-danger"
-                    onClick={() => deleteProjectById(project.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-success"
-                    onClick={() => updateProjectById(project.id)}
-                  >
-                    Update
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className=" btn btn-dark"
-                    onClick={() =>
-                      history.push(`/projectDetails/${project.id}`)
-                    }
-                  >
-                    Details
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {filteredProjects
+              ? filteredProjects.map((project) => (
+                  <tr key={project.id}>
+                    <td>{project.id}</td>
+                    <td>{project.title}</td>
+                    <td>{project.recommendedSpecialization}</td>
+                    <td>{project.degreeType}</td>
+                    <td>
+                      <button
+                        className=" btn btn-danger"
+                        onClick={() => deleteProjectById(project.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-success"
+                        onClick={() => updateProjectById(project.id)}
+                      >
+                        Update
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className=" btn btn-dark"
+                        onClick={() =>
+                          history.push(`/projectDetails/${project.id}`)
+                        }
+                      >
+                        Details
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              : []}
           </tbody>
         </table>
         <div className="row">

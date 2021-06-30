@@ -1,5 +1,9 @@
+import Axios from "axios";
 import React, { useEffect, useState } from "react";
-import { retrieveAssignedProject } from "../../services/ProjectService";
+import {
+  retrieveAssignedProject,
+  saveProjectFile,
+} from "../../services/ProjectService";
 
 const AssignedProject = ({ activeUser }) => {
   const [coreProject, setCoreProject] = useState("");
@@ -9,6 +13,28 @@ const AssignedProject = ({ activeUser }) => {
       setCoreProject(response.data)
     );
   }, []);
+
+  const uploadFile = async (e) => {
+    console.log(e.target.files);
+    let data = new FormData();
+    data.append("file", e.target.files[0]);
+
+    saveProjectFile(coreProject.id, data);
+  };
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
   return (
     <div className="container">
@@ -47,6 +73,9 @@ const AssignedProject = ({ activeUser }) => {
               : ""}
           </ul>
           <h5 className="card-title"> II) Stages and Deadlines</h5>
+        </div>
+        <div>
+          <input type="file" onChange={(e) => uploadFile(e)}></input>
         </div>
       </div>
     </div>

@@ -23,13 +23,13 @@ const ProjectForStudent = ({ activeUser }) => {
         setProjectOwner(r.data);
         getAssesmentReview(activeUser.id).then((r) => {
           setReview(r.data);
-          calculateScoring();
+          calculateScoring(r.data, response.data);
         });
       });
     });
   }, []);
 
-  function calculateScoring() {
+  function calculateScoring(review, project) {
     console.log(review);
     console.log(project);
     let kScore;
@@ -84,7 +84,7 @@ const ProjectForStudent = ({ activeUser }) => {
       student: activeUser,
       project: project,
       status: "Request made By Student",
-      scoring: scoring,
+      scoring: scoring != [] ? scoring : 0,
     }).then((res) => setApplied(true));
   }
 

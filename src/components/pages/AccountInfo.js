@@ -202,7 +202,10 @@ const AccountInfo = ({ activeUser, setActiveUser }) => {
                           id="gridRadios1"
                           value="Bachelor"
                         />
-                        <label className="form-check-label" for="gridRadios1">
+                        <label
+                          className="form-check-label"
+                          htmlFor="gridRadios1"
+                        >
                           Bachelor
                         </label>
                       </div>

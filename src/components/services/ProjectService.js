@@ -36,6 +36,7 @@ export const getProjectOwner = (professorId) => {
 };
 
 export const addRequest = (request) => {
+  console.log(request);
   return Axios.post("http://localhost:8081/addRequest", request);
 };
 
@@ -105,4 +106,17 @@ export const changeStatusOfStage = (stageId, status) => {
   return Axios.post(`http://localhost:8081/changeStatusOfStage/${stageId}`, {
     newStatus: status,
   });
+};
+
+export const saveProjectFile = (projectId, file) => {
+  return Axios.post(`http://localhost:8081/saveProjectFile/${projectId}`, file);
+};
+
+export const downloadProjectFile = (projectId) => {
+  return Axios.get(
+    `http://localhost:8081/downloadLocalProjectFile/${projectId}`,
+    {
+      responseType: "blob",
+    }
+  );
 };

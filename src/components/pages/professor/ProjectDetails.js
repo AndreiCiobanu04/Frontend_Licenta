@@ -4,6 +4,7 @@ import {
   addStageToProject,
   changeStatusOfStage,
   deleteStageById,
+  downloadProjectFile,
   getStudentById,
   requestsForSpecificProject,
   retrieveProjectById,
@@ -28,7 +29,7 @@ const ProjectDetails = ({ activeUser }) => {
     retrieveProjectById(id).then((response) => {
       setProjectInfo(response.data);
       setDeadlines(response.data.stages);
-      if (response.data.student.id) {
+      if (response.data.student && response.data.student.id) {
         console.log(response.data);
         getStudentById(response.data.student.id).then((r) =>
           setStudent(r.data)
@@ -39,6 +40,25 @@ const ProjectDetails = ({ activeUser }) => {
     console.log(projectInfo);
   }, [reload]);
 
+  function downloadFile() {
+    downloadProjectFile(projectInfo.id).then((blob) => {
+      const file = new Blob([blob.data], { type: "application/pdf" });
+      // const reader = new FileReader();
+      // console.log(reader.readAsArrayBuffer(file));
+      // console.log(file.stream());
+      const url = window.URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.setAttribute("href", url);
+      a.setAttribute("download", "Licenta.pdf");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    //const url = window.URL.createObjectURL(file);
+    //FileSaver.saveAs(file, `Licenta`);
+  }
+
   function onSubmit(values, resetForm) {
     console.log(student);
     addStageToProject(projectInfo.id, values).then((r) => {
@@ -46,11 +66,11 @@ const ProjectDetails = ({ activeUser }) => {
         from_name: "Echipa Aplicatie Licenta",
         to_name: student.firstName + student.lastName,
         to_email: student.email,
-        message: `Un nou stagiu a fost adaugat pentru proiectul ${
+        message: `A new stage has been set to your project ${
           projectInfo.title
-        }. Termenul stabilit este ${moment(values.deadline).format(
+        }. The deadline is ${moment(values.deadline).format(
           "DD-MM-YYYY"
-        )}`,
+        )}. More details can be found in your account.`,
       };
 
       sendEmail(obj);
@@ -117,6 +137,9 @@ const ProjectDetails = ({ activeUser }) => {
                   : ""}
               </p>
             </dd>
+            <button className="btn btn-secondary" onClick={downloadFile}>
+              Download Project File
+            </button>
           </dl>
         </div>
 
@@ -127,7 +150,7 @@ const ProjectDetails = ({ activeUser }) => {
       <div>
         <h5>Stages and Deadlines</h5>
         {deadlines.length > 0 ? (
-          <div>
+          <div style={{ marginBottom: "100px" }}>
             {deadlines.map((element, index) => (
               <div key={index} className="card">
                 <div className="card-body">
